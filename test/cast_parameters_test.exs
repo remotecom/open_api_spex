@@ -70,9 +70,7 @@ defmodule OpenApiSpex.CastParametersTest do
       schema = %Schema{
         title: "SizeParams",
         type: :array,
-        uniqueItems: true,
-        minItems: 2,
-        items: size_schema
+        items: %Schema.Items{unique: true, min: 2, value: size_schema}
       }
 
       parameter = %Parameter{

@@ -290,11 +290,11 @@ defmodule OpenApiSpex.Cast.Error do
   end
 
   def message(%{reason: :min_items, length: min, value: array}) do
-    "Array length #{length(array)} is smaller than minItems: #{min}"
+    "Array length #{length(array)} is smaller than min items: #{min}"
   end
 
   def message(%{reason: :max_items, length: max, value: array}) do
-    "Array length #{length(array)} is larger than maxItems: #{max}"
+    "Array length #{length(array)} is larger than max items: #{max}"
   end
 
   def message(%{reason: :multiple_of, length: multiple, value: count}) do
