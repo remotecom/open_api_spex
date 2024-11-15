@@ -100,8 +100,8 @@ defmodule OpenApiSpex.CastStringTest do
     end
 
     # Note: we measure length of string after trimming leading and trailing whitespace
-    test "minLength" do
-      schema = %Schema{type: :string, minLength: 1}
+    test "min length" do
+      schema = %Schema{type: :string, length: %Schema.Length{min: 1}}
 
       assert {:ok, "a"} = cast(value: "a", schema: schema)
       assert {:error, [error]} = cast(value: "", schema: schema)
@@ -110,8 +110,8 @@ defmodule OpenApiSpex.CastStringTest do
     end
 
     # Note: we measure length of string after trimming leading and trailing whitespace
-    test "maxLength" do
-      schema = %Schema{type: :string, maxLength: 1}
+    test "max length" do
+      schema = %Schema{type: :string, length: %Schema.Length{max: 1}}
 
       assert {:ok, "a"} = cast(value: "a", schema: schema)
       assert {:error, [%Error{reason: :max_length}]} = cast(value: "aa", schema: schema)
@@ -120,8 +120,8 @@ defmodule OpenApiSpex.CastStringTest do
       assert {:error, [%Error{reason: :max_length}]} = cast(value: :aa, schema: schema)
     end
 
-    test "maxLength and minLength" do
-      schema = %Schema{type: :string, minLength: 1, maxLength: 2}
+    test "max length and min length" do
+      schema = %Schema{type: :string, length: %Schema.Length{min: 1, max: 2}}
 
       assert {:error, [%Error{reason: :min_length}]} = cast(value: "", schema: schema)
       assert {:error, [%Error{reason: :max_length}]} = cast(value: "aaa", schema: schema)
@@ -130,8 +130,8 @@ defmodule OpenApiSpex.CastStringTest do
       assert {:error, [%Error{reason: :max_length}]} = cast(value: :aaa, schema: schema)
     end
 
-    test "minLength and pattern" do
-      schema = %Schema{type: :string, minLength: 1, pattern: ~r/\d-\d/}
+    test "min length and pattern" do
+      schema = %Schema{type: :string, length: %Schema.Length{min: 1}, pattern: ~r/\d-\d/}
 
       assert {:error, [%Error{reason: :invalid_format}, %Error{reason: :min_length}]} =
                cast(value: "", schema: schema)

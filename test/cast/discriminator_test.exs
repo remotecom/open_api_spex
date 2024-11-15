@@ -56,7 +56,7 @@ defmodule OpenApiSpex.CastDiscriminatorTest do
     wolf_schema =
       build_schema("Wolf", %{
         animal_type: %Schema{type: :string},
-        breed: %Schema{type: :string, minLength: 5},
+        breed: %Schema{type: :string, length: %Schema.Length{min: 5}},
         age: %Schema{type: :integer}
       })
 
@@ -286,7 +286,7 @@ defmodule OpenApiSpex.CastDiscriminatorTest do
 
       # The format of the error path should be confirmed. This is just a guess.
       assert Error.message_with_path(error) ==
-               "#/data/breed: String length is smaller than minLength: 5"
+               "#/data/breed: String length is smaller than min length: 5"
     end
 
     if Version.compare(System.version(), "1.10.0") in [:gt, :eq] do

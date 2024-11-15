@@ -2,14 +2,14 @@ defmodule OpenApiSpex.Cast.String do
   @moduledoc """
 
   This module will cast a binary to either an Elixir DateTime or Date. Otherwise it will
-  validate a binary based on maxLength, minLength, or a Regex pattern passed through the
+  validate a binary based on length (min/max), or a Regex pattern passed through the
   schema struct.
 
   """
 
-  alias OpenApiSpex.{Cast, Cast.Error}
+  alias OpenApiSpex.{Cast, Cast.Error, Schema}
 
-  @schema_fields [:maxLength, :minLength, :pattern]
+  @schema_fields [:length, :pattern]
 
   def cast(%{value: %Date{} = date, schema: %{format: :date}}), do: {:ok, date}
 
@@ -138,21 +138,31 @@ defmodule OpenApiSpex.Cast.String do
 
   ## Private functions
 
-  defp apply_validation(%{value: value, schema: %{maxLength: max_length}} = ctx, [
-         :maxLength | fields
-       ])
-       when is_integer(max_length) do
-    if String.length(value) > max_length do
-      ctx
-      |> apply_error({:max_length, max_length})
-      |> apply_validation(fields)
-    else
-      apply_validation(ctx, fields)
-    end
+  defp apply_validation(
+         %{value: value, schema: %{length: %Schema.Length{max: max_length, min: min_length}}} = ctx,
+         [
+           :length | fields
+         ]
+       ) do
+    ctx =
+      if is_integer(max_length) and String.length(value) > max_length do
+        apply_error(ctx, {:max_length, max_length})
+      else
+        ctx
+      end
+
+    ctx =
+      if is_integer(min_length) and String.length(value) < min_length do
+        apply_error(ctx, {:min_length, min_length})
+      else
+        ctx
+      end
+
+    apply_validation(ctx, fields)
   end
 
-  defp apply_validation(%{value: value, schema: %{minLength: min_length}} = ctx, [
-         :minLength | fields
+  defp apply_validation(%{value: value, schema: %{length: %Schema.Length{min: min_length}}} = ctx, [
+         :length | fields
        ])
        when is_integer(min_length) do
     if String.length(value) < min_length do
