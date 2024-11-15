@@ -278,11 +278,11 @@ defmodule OpenApiSpex.Cast.Error do
   end
 
   def message(%{reason: :min_length, length: length}) do
-    "String length is smaller than minLength: #{length}"
+    "String length is smaller than min length: #{length}"
   end
 
   def message(%{reason: :max_length, length: length}) do
-    "String length is larger than maxLength: #{length}"
+    "String length is larger than max length: #{length}"
   end
 
   def message(%{reason: :unique_items}) do

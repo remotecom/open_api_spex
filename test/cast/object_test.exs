@@ -410,7 +410,7 @@ defmodule OpenApiSpex.ObjectTest do
       schema = %Schema{
         type: :object,
         properties: %{
-          name: %Schema{type: :string, minLength: 3},
+          name: %Schema{type: :string, length: %Schema.Length{min: 3}},
           age: %Schema{type: :integer, minimum: 16}
         }
       }

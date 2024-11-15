@@ -93,7 +93,7 @@ defmodule OpenApiSpex.CastAllOfTest do
           %Schema{
             type: :object,
             properties: %{
-              last_name: %Schema{type: :string, minLength: 2}
+              last_name: %Schema{type: :string, length: %Schema.Length{min: 2}}
             }
           }
         ]
@@ -106,7 +106,7 @@ defmodule OpenApiSpex.CastAllOfTest do
                "Failed to cast value as object. Value must be castable using `allOf` schemas listed."
 
       assert Error.message(error_last_name) ==
-               "String length is smaller than minLength: 2"
+               "String length is smaller than min length: 2"
     end
 
     test "allOf, when given required params only from inside the allOf schema, return an error" do
@@ -230,13 +230,13 @@ defmodule OpenApiSpex.CastAllOfTest do
             type: :object,
             additionalProperties: false,
             properties: %{
-              last_name: %Schema{type: :string, minLength: 2}
+              last_name: %Schema{type: :string, length: %Schema.Length{min: 2}}
             }
           },
           %Schema{
             type: :object,
             properties: %{
-              name: %Schema{type: :string, minLength: 2}
+              name: %Schema{type: :string, length: %Schema.Length{min: 2}}
             }
           }
         ]

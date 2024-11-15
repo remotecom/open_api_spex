@@ -389,22 +389,22 @@ defmodule OpenApiSpex.DeprecatedCast do
     do: {:error, "#{path}: #{value} is smaller than minimum #{n}"}
 
   @spec validate_max_length(Schema.t(), String.t(), String.t()) :: :ok | {:error, String.t()}
-  defp validate_max_length(%{maxLength: nil}, _val, _path), do: :ok
+  defp validate_max_length(%{length: nil}, _val, _path), do: :ok
 
-  defp validate_max_length(%{maxLength: n}, value, path) do
+  defp validate_max_length(%{length: %Schema.Length{max: n}}, value, path) do
     case String.length(value) <= n do
       true -> :ok
-      _ -> {:error, "#{path}: String length is larger than maxLength: #{n}"}
+      _ -> {:error, "#{path}: String length is larger than max length: #{n}"}
     end
   end
 
   @spec validate_min_length(Schema.t(), String.t(), String.t()) :: :ok | {:error, String.t()}
-  defp validate_min_length(%{minLength: nil}, _val, _path), do: :ok
+  defp validate_min_length(%{length: nil}, _val, _path), do: :ok
 
-  defp validate_min_length(%{minLength: n}, value, path) do
+  defp validate_min_length(%{length: %Schema.Length{min: n}}, value, path) do
     case String.length(value) >= n do
       true -> :ok
-      _ -> {:error, "#{path}: String length is smaller than minLength: #{n}"}
+      _ -> {:error, "#{path}: String length is smaller than min length: #{n}"}
     end
   end
 

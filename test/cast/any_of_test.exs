@@ -98,7 +98,7 @@ defmodule OpenApiSpex.CastAnyOfTest do
         type: :object,
         additionalProperties: false,
         properties: %{
-          food: %Schema{type: :string, minLength: 5}
+          food: %Schema{type: :string, length: %Schema.Length{min: 5}}
         }
       }
 
@@ -115,7 +115,7 @@ defmodule OpenApiSpex.CastAnyOfTest do
                "Unexpected field: food"
 
       assert Error.message(error_food) ==
-               "String length is smaller than minLength: 5"
+               "String length is smaller than min length: 5"
     end
 
     test "no castable schema" do

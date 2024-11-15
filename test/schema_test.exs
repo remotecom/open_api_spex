@@ -107,15 +107,15 @@ defmodule OpenApiSpex.SchemaTest do
       assert Schema.example(%Schema{type: :string}) == ""
     end
 
-    test "defaults to type-appropriate value for :string with a minLength" do
-      assert Schema.example(%Schema{type: :string, minLength: 1}) == "a"
-      assert Schema.example(%Schema{type: :string, minLength: 2}) == "ab"
-      assert Schema.example(%Schema{type: :string, minLength: 3}) == "abc"
-      assert Schema.example(%Schema{type: :string, minLength: 4}) == "abcd"
-      assert Schema.example(%Schema{type: :string, minLength: 5}) == "abcde"
-      assert Schema.example(%Schema{type: :string, minLength: 6}) == "abcdef"
-      assert Schema.example(%Schema{type: :string, minLength: 7}) == "example"
-      assert Schema.example(%Schema{type: :string, minLength: 9}) == "exampleex"
+    test "defaults to type-appropriate value for :string with a min length" do
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 1}}) == "a"
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 2}}) == "ab"
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 3}}) == "abc"
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 4}}) == "abcd"
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 5}}) == "abcde"
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 6}}) == "abcdef"
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 7}}) == "example"
+      assert Schema.example(%Schema{type: :string, length: %Schema.Length{min: 9}}) == "exampleex"
     end
 
     test "defaults to type-appropriate value for :integer, :number" do
