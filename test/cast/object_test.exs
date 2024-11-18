@@ -372,14 +372,14 @@ defmodule OpenApiSpex.ObjectTest do
       assert user == %User{name: "Name"}
     end
 
-    test "validates maxProperties" do
+    test "validates max properties" do
       schema = %Schema{
         type: :object,
         properties: %{
           one: nil,
           two: nil
         },
-        maxProperties: 1
+        propertiesSize: %Schema.PropertiesSize{max: 1}
       }
 
       assert {:error, [error]} = cast(value: %{one: "one", two: "two"}, schema: schema)
@@ -389,14 +389,14 @@ defmodule OpenApiSpex.ObjectTest do
       assert {:ok, _} = cast(value: %{one: "one"}, schema: schema)
     end
 
-    test "validates minProperties" do
+    test "validates min properties" do
       schema = %Schema{
         type: :object,
         properties: %{
           one: nil,
           two: nil
         },
-        minProperties: 1
+        propertiesSize: %Schema.PropertiesSize{min: 1}
       }
 
       assert {:error, [error]} = cast(value: %{}, schema: schema)

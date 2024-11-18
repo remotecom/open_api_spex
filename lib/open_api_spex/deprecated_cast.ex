@@ -487,25 +487,29 @@ defmodule OpenApiSpex.DeprecatedCast do
   end
 
   @spec validate_max_properties(Schema.t(), %{}, String.t()) :: :ok | {:error, String.t()}
-  defp validate_max_properties(%Schema{type: :object, maxProperties: nil}, _val, _path), do: :ok
+  defp validate_max_properties(%Schema{type: :object, propertiesSize: nil}, _val, _path), do: :ok
 
-  defp validate_max_properties(%Schema{type: :object, maxProperties: n}, val, _path)
+  defp validate_max_properties(%Schema{type: :object, propertiesSize: %Schema.PropertiesSize{max: nil}}, _val, _path), do: :ok
+
+  defp validate_max_properties(%Schema{type: :object, propertiesSize: %Schema.PropertiesSize{max: n}}, val, _path)
        when map_size(val) <= n,
        do: :ok
 
-  defp validate_max_properties(%Schema{type: :object, maxProperties: n}, val, path) do
-    {:error, "#{path}: Object property count #{map_size(val)} is greater than maxProperties: #{n}"}
+  defp validate_max_properties(%Schema{type: :object, propertiesSize: %Schema.PropertiesSize{max: n}}, val, path) do
+    {:error, "#{path}: Object property count #{map_size(val)} is greater than max properties: #{n}"}
   end
 
   @spec validate_min_properties(Schema.t(), %{}, String.t()) :: :ok | {:error, String.t()}
-  defp validate_min_properties(%Schema{type: :object, minProperties: nil}, _val, _path), do: :ok
+  defp validate_min_properties(%Schema{type: :object, propertiesSize: nil}, _val, _path), do: :ok
 
-  defp validate_min_properties(%Schema{type: :object, minProperties: n}, val, _path)
+  defp validate_min_properties(%Schema{type: :object, propertiesSize: %Schema.PropertiesSize{min: nil}}, _val, _path), do: :ok
+
+  defp validate_min_properties(%Schema{type: :object, propertiesSize: %Schema.PropertiesSize{min: n}}, val, _path)
        when map_size(val) >= n,
        do: :ok
 
-  defp validate_min_properties(%Schema{type: :object, minProperties: n}, val, path) do
-    {:error, "#{path}: Object property count #{map_size(val)} is less than minProperties: #{n}"}
+  defp validate_min_properties(%Schema{type: :object, propertiesSize: %Schema.PropertiesSize{min: n}}, val, path) do
+    {:error, "#{path}: Object property count #{map_size(val)} is less than min properties: #{n}"}
   end
 
   @spec validate_object_properties(Enumerable.t(), MapSet.t(), %{}, String.t(), %{

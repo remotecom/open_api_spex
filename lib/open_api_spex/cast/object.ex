@@ -3,6 +3,7 @@ defmodule OpenApiSpex.Cast.Object do
   alias OpenApiSpex.Cast
   alias OpenApiSpex.Cast.Utils
   alias OpenApiSpex.Reference
+  alias OpenApiSpex.Schema
 
   def cast(%{value: value} = ctx) when not is_map(value) do
     Cast.error(ctx, {:invalid_type, :object})
@@ -69,7 +70,7 @@ defmodule OpenApiSpex.Cast.Object do
     end
   end
 
-  defp check_max_properties(%{schema: %{maxProperties: max_properties}} = ctx)
+  defp check_max_properties(%{schema: %{propertiesSize: %Schema.PropertiesSize{max: max_properties}}} = ctx)
        when is_integer(max_properties) do
     count = map_size(ctx.value)
 
@@ -82,7 +83,7 @@ defmodule OpenApiSpex.Cast.Object do
 
   defp check_max_properties(_ctx), do: :ok
 
-  defp check_min_properties(%{schema: %{minProperties: min_properties}} = ctx)
+  defp check_min_properties(%{schema: %{propertiesSize: %Schema.PropertiesSize{min: min_properties}}} = ctx)
        when is_integer(min_properties) do
     count = map_size(ctx.value)
 
