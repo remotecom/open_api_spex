@@ -263,7 +263,7 @@ defmodule OpenApiSpex.CastParametersTest do
       type: :object,
       title: "FilterParams",
       properties: %{
-        size: %Schema{type: :string, pattern: "^XS|S|M|L|XL$"},
+        size: %Schema{type: :string, stringMeta: %Schema.StringMeta{pattern: "^XS|S|M|L|XL$"}},
         color: %Schema{type: :string}
       }
     }

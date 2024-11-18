@@ -56,7 +56,7 @@ defmodule OpenApiSpex.CastDiscriminatorTest do
     wolf_schema =
       build_schema("Wolf", %{
         animal_type: %Schema{type: :string},
-        breed: %Schema{type: :string, length: %Schema.Length{min: 5}},
+        breed: %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 5}},
         age: %Schema{type: :integer}
       })
 

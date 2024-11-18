@@ -93,7 +93,7 @@ defmodule OpenApiSpex.CastAllOfTest do
           %Schema{
             type: :object,
             properties: %{
-              last_name: %Schema{type: :string, length: %Schema.Length{min: 2}}
+              last_name: %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 2}}
             }
           }
         ]
@@ -230,13 +230,13 @@ defmodule OpenApiSpex.CastAllOfTest do
             type: :object,
             additionalProperties: false,
             properties: %{
-              last_name: %Schema{type: :string, length: %Schema.Length{min: 2}}
+              last_name: %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 2}}
             }
           },
           %Schema{
             type: :object,
             properties: %{
-              name: %Schema{type: :string, length: %Schema.Length{min: 2}}
+              name: %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 2}}
             }
           }
         ]

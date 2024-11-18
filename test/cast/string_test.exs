@@ -22,7 +22,7 @@ defmodule OpenApiSpex.CastStringTest do
     end
 
     test "string with pattern" do
-      schema = %Schema{type: :string, pattern: ~r/\d-\d/}
+      schema = %Schema{type: :string, stringMeta: %Schema.StringMeta{pattern: ~r/\d-\d/}}
       assert cast(value: "1-2", schema: schema) == {:ok, "1-2"}
       assert {:error, [error]} = cast(value: "hello", schema: schema)
       assert error.reason == :invalid_format
@@ -101,7 +101,7 @@ defmodule OpenApiSpex.CastStringTest do
 
     # Note: we measure length of string after trimming leading and trailing whitespace
     test "min length" do
-      schema = %Schema{type: :string, length: %Schema.Length{min: 1}}
+      schema = %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 1}}
 
       assert {:ok, "a"} = cast(value: "a", schema: schema)
       assert {:error, [error]} = cast(value: "", schema: schema)
@@ -111,7 +111,7 @@ defmodule OpenApiSpex.CastStringTest do
 
     # Note: we measure length of string after trimming leading and trailing whitespace
     test "max length" do
-      schema = %Schema{type: :string, length: %Schema.Length{max: 1}}
+      schema = %Schema{type: :string, stringMeta: %Schema.StringMeta{maxLength: 1}}
 
       assert {:ok, "a"} = cast(value: "a", schema: schema)
       assert {:error, [%Error{reason: :max_length}]} = cast(value: "aa", schema: schema)
@@ -121,7 +121,7 @@ defmodule OpenApiSpex.CastStringTest do
     end
 
     test "max length and min length" do
-      schema = %Schema{type: :string, length: %Schema.Length{min: 1, max: 2}}
+      schema = %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 1, maxLength: 2}}
 
       assert {:error, [%Error{reason: :min_length}]} = cast(value: "", schema: schema)
       assert {:error, [%Error{reason: :max_length}]} = cast(value: "aaa", schema: schema)
@@ -131,7 +131,7 @@ defmodule OpenApiSpex.CastStringTest do
     end
 
     test "min length and pattern" do
-      schema = %Schema{type: :string, length: %Schema.Length{min: 1}, pattern: ~r/\d-\d/}
+      schema = %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 1, pattern: ~r/\d-\d/}}
 
       assert {:error, [%Error{reason: :invalid_format}, %Error{reason: :min_length}]} =
                cast(value: "", schema: schema)

@@ -85,7 +85,7 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "length": {"max": 10},
+                    "stringMeta": {"maxLength": 10},
                     "type": "string"
                   }
                 }
@@ -298,7 +298,7 @@
             "application/json": {
               "schema": {
                 "schema": {
-                  "length": {"max": 10},
+                  "stringMeta": {"maxLength": 10},
                   "type": "string"
                 }
               }
@@ -328,7 +328,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "length": {"max": 10},
+              "stringMeta": {"maxLength": 10},
               "type": "string"
             }
           }
@@ -422,7 +422,7 @@
                   "content": {
                     "application/json": {
                       "schema": {
-                        "length": {"max": 10},
+                        "stringMeta": {"maxLength": 10},
                         "type": "string"
                       }
                     }
@@ -453,7 +453,7 @@
             "name": "myParam",
             "required": true,
             "schema": {
-              "length": {"max": 10},
+              "stringMeta": {"maxLength": 10},
               "type": "string"
             }
           }
@@ -472,11 +472,11 @@
                   "data": {
                     "properties": {
                       "first_name": {
-                        "length": {"max": 10},
+                        "stringMeta": {"maxLength": 10},
                         "type": "string"
                       },
                       "given_name": {
-                        "length": {"max": 32},
+                        "stringMeta": {"maxLength": 32},
                         "type": "string"
                       },
                       "passengers": {
@@ -508,11 +508,11 @@
                       "some_number": {
                         "allOf": [
                           {
-                            "length": {"max": 10},
+                            "stringMeta": {"maxLength": 10},
                             "type": "string"
                           },
                           {
-                            "length": {"min": 2},
+                            "stringMeta": {"minLength": 2},
                             "type": "string"
                           }
                         ]
