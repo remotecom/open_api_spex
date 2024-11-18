@@ -1,8 +1,13 @@
 defmodule OpenApiSpex.Cast.Array do
   @moduledoc false
   alias OpenApiSpex.Cast
+  alias OpenApiSpex.Schema
 
-  def cast(%{value: [], schema: %{minItems: nil}}) do
+  def cast(%{value: [], schema: %{itemsMeta: nil}}) do
+    {:ok, []}
+  end
+
+  def cast(%{value: [], schema: %{itemsMeta: %Schema.ItemsMeta{min: nil}}}) do
     {:ok, []}
   end
 
@@ -18,37 +23,30 @@ defmodule OpenApiSpex.Cast.Array do
     do: Cast.error(ctx, {:invalid_type, :array})
 
   ## Private functions
-
-  defp cast_array(%{value: value, schema: %{minItems: minimum}} = ctx) when is_integer(minimum) do
+  defp cast_array(%{value: value, schema: %{itemsMeta: %Schema.ItemsMeta{min: min, max: max, unique: unique}}} = ctx) do
     item_count = Enum.count(value)
 
-    if item_count < minimum do
-      Cast.error(ctx, {:min_items, minimum, item_count})
+    if is_integer(min) and item_count < min do
+      Cast.error(ctx, {:min_items, min, item_count})
     else
-      Cast.success(ctx, :minItems)
-    end
-  end
+      if is_integer(max) and item_count > max do
+        Cast.error(ctx, {:max_items, max, item_count})
+      else
+        if unique do
+          unique_size =
+            value
+            |> MapSet.new()
+            |> MapSet.size()
 
-  defp cast_array(%{value: value, schema: %{maxItems: maximum}} = ctx) when is_integer(maximum) do
-    item_count = Enum.count(value)
-
-    if item_count > maximum do
-      Cast.error(ctx, {:max_items, maximum, item_count})
-    else
-      Cast.success(ctx, :maxItems)
-    end
-  end
-
-  defp cast_array(%{value: value, schema: %{uniqueItems: true}} = ctx) do
-    unique_size =
-      value
-      |> MapSet.new()
-      |> MapSet.size()
-
-    if unique_size != Enum.count(value) do
-      Cast.error(ctx, {:unique_items})
-    else
-      Cast.success(ctx, :uniqueItems)
+          if unique_size != Enum.count(value) do
+            Cast.error(ctx, {:unique_items})
+          else
+            Cast.success(ctx, :itemsMeta)
+          end
+        else
+          Cast.success(ctx, :itemsMeta)
+        end
+      end
     end
   end
 

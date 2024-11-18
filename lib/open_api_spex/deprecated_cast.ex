@@ -425,23 +425,31 @@ defmodule OpenApiSpex.DeprecatedCast do
   end
 
   @spec validate_max_items(Schema.t(), list, String.t()) :: :ok | {:error, String.t()}
-  defp validate_max_items(%Schema{maxItems: nil}, _val, _path), do: :ok
-  defp validate_max_items(%Schema{maxItems: n}, value, _path) when length(value) <= n, do: :ok
+  defp validate_max_items(%Schema{itemsMeta: nil}, _val, _path), do: :ok
+  defp validate_max_items(%Schema{itemsMeta: %Schema.ItemsMeta{max: nil}}, _val, _path), do: :ok
 
-  defp validate_max_items(%Schema{maxItems: n}, value, path) do
+  defp validate_max_items(%Schema{itemsMeta: %Schema.ItemsMeta{max: n}}, value, _path)
+       when length(value) <= n,
+       do: :ok
+
+  defp validate_max_items(%Schema{itemsMeta: %Schema.ItemsMeta{max: n}}, value, path) do
     {:error, "#{path}: Array length #{length(value)} is larger than maxItems: #{n}"}
   end
 
   @spec validate_min_items(Schema.t(), list, String.t()) :: :ok | {:error, String.t()}
-  defp validate_min_items(%Schema{minItems: nil}, _val, _path), do: :ok
-  defp validate_min_items(%Schema{minItems: n}, value, _path) when length(value) >= n, do: :ok
+  defp validate_min_items(%Schema{itemsMeta: nil}, _val, _path), do: :ok
+  defp validate_min_items(%Schema{itemsMeta: %Schema.ItemsMeta{min: nil}}, _val, _path), do: :ok
 
-  defp validate_min_items(%Schema{minItems: n}, value, path) do
+  defp validate_min_items(%Schema{itemsMeta: %Schema.ItemsMeta{min: n}}, value, _path)
+       when length(value) >= n,
+       do: :ok
+
+  defp validate_min_items(%Schema{itemsMeta: %Schema.ItemsMeta{min: n}}, value, path) do
     {:error, "#{path}: Array length #{length(value)} is smaller than minItems: #{n}"}
   end
 
   @spec validate_unique_items(Schema.t(), list, String.t()) :: :ok | {:error, String.t()}
-  defp validate_unique_items(%Schema{uniqueItems: true}, value, path) do
+  defp validate_unique_items(%Schema{itemsMeta: %Schema.ItemsMeta{unique: true}}, value, path) do
     unique_size =
       value
       |> MapSet.new()
