@@ -286,14 +286,14 @@ defmodule OpenApiSpec.CastTest do
       schema = %Schema{
         type: :object,
         properties: %{
-          id: %Schema{type: :string, readOnly: true},
+          id: %Schema{type: :string, permissions: %Schema.Permissions{readOnly: true}},
           name: %Reference{"$ref": "#/components/schemas/Name"},
           age: %Schema{type: :integer}
         },
         required: [:id, :name, :age]
       }
 
-      schemas = %{"Name" => %Schema{type: :string, readOnly: true}}
+      schemas = %{"Name" => %Schema{type: :string, permissions: %Schema.Permissions{readOnly: true}}}
 
       value = %{"age" => 30}
       assert {:error, _} = Cast.cast(schema, value, schemas, [])

@@ -214,8 +214,7 @@ defmodule OpenApiSpex.OpenApi.DecodeTest do
 
       assert %OpenApiSpex.Schema{
                nullable: false,
-               readOnly: false,
-               writeOnly: false,
+               permissions: %{"readOnly" => false, "writeOnly" => false},
                deprecated: false,
                example: %{},
                externalDocs: %OpenApiSpex.ExternalDocumentation{

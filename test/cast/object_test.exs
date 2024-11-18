@@ -103,10 +103,10 @@ defmodule OpenApiSpex.ObjectTest do
     end
 
     @test_cases [
-      %{schema: [readOnly: true], read_write_scope: :write, result: :ok},
-      %{schema: [writeOnly: true], read_write_scope: :read, result: :ok},
-      %{schema: [readOnly: true], read_write_scope: nil, result: :error},
-      %{schema: [writeOnly: true], read_write_scope: nil, result: :error}
+      %{schema: [permissions: %Schema.Permissions{readOnly: true}], read_write_scope: :write, result: :ok},
+      %{schema: [permissions: %Schema.Permissions{writeOnly: true}], read_write_scope: :read, result: :ok},
+      %{schema: [permissions: %Schema.Permissions{readOnly: true}], read_write_scope: nil, result: :error},
+      %{schema: [permissions: %Schema.Permissions{writeOnly: true}], read_write_scope: nil, result: :error}
     ]
 
     for test_case <- @test_cases do
