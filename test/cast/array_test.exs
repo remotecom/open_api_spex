@@ -19,7 +19,7 @@ defmodule OpenApiSpec.Cast.ArrayTest do
     end
 
     test "with maxItems" do
-      schema = %Schema{type: :array, maxItems: 2}
+      schema = %Schema{type: :array, itemsMeta: %Schema.ItemsMeta{max: 2}}
       assert cast(value: [1, 2], schema: schema) == {:ok, [1, 2]}
       assert {:error, [error]} = cast(value: [1, 2, 3], schema: schema)
 
@@ -29,7 +29,7 @@ defmodule OpenApiSpec.Cast.ArrayTest do
     end
 
     test "with minItems" do
-      schema = %Schema{type: :array, minItems: 2}
+      schema = %Schema{type: :array, itemsMeta: %Schema.ItemsMeta{min: 2}}
       assert cast(value: [1, 2], schema: schema) == {:ok, [1, 2]}
       assert {:error, [error]} = cast(value: [1], schema: schema)
 
@@ -39,12 +39,13 @@ defmodule OpenApiSpec.Cast.ArrayTest do
 
       # Test for #179, "minLength validation ignores empty array"
       assert {:error, [%Error{reason: :min_items, value: []}]} = cast(value: [], schema: schema)
-      # Negative test, check that minItems: 0 allows an empty array
-      assert cast(value: [], schema: %Schema{type: :array, minItems: 0}) == {:ok, []}
+      # Negative test, check that min: 0 allows an empty array
+      assert cast(value: [], schema: %Schema{type: :array, itemsMeta: %Schema.ItemsMeta{min: 0}}) ==
+               {:ok, []}
     end
 
     test "with uniqueItems" do
-      schema = %Schema{type: :array, uniqueItems: true}
+      schema = %Schema{type: :array, itemsMeta: %Schema.ItemsMeta{unique: true}}
       assert cast(value: [1, 2], schema: schema) == {:ok, [1, 2]}
       assert {:error, [error]} = cast(value: [1, 1], schema: schema)
 
