@@ -267,7 +267,7 @@ defmodule OpenApiSpex.CastAllOfTest do
           %Schema{
             type: :object,
             properties: %{
-              last_name: %Schema{type: :string, readOnly: true}
+              last_name: %Schema{type: :string, permissions: %Schema.Permissions{readOnly: true}}
             },
             required: [:last_name]
           }

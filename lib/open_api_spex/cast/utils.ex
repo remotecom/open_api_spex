@@ -2,6 +2,7 @@ defmodule OpenApiSpex.Cast.Utils do
   @moduledoc false
 
   alias OpenApiSpex.Cast.Error
+  alias OpenApiSpex.Schema
 
   # Merge 2 maps considering as equal keys that are atom or string representation
   # of that atom. Atom keys takes precedence over string ones.
@@ -23,8 +24,8 @@ defmodule OpenApiSpex.Cast.Utils do
     required =
       Enum.filter(required, fn key ->
         case {ctx.read_write_scope, ctx.schema.properties[key]} do
-          {:read, %{writeOnly: true}} -> false
-          {:write, %{readOnly: true}} -> false
+          {:read, %{permissions: %Schema.Permissions{writeOnly: true}}} -> false
+          {:write, %{permissions: %Schema.Permissions{readOnly: true}}} -> false
           _ -> true
         end
       end)

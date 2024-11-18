@@ -27,7 +27,7 @@ defmodule OpenApiSpex.TestAssertionsTest do
     test "required object property, but different read_write_scope" do
       schema = %Schema{
         type: :object,
-        properties: %{publish: %Schema{type: :boolean, writeOnly: true}},
+        properties: %{publish: %Schema{type: :boolean, permissions: %Schema.Permissions{writeOnly: true}}},
         required: [:publish]
       }
 
@@ -43,7 +43,7 @@ defmodule OpenApiSpex.TestAssertionsTest do
       schema = %Schema{
         type: :object,
         title: "MySchema",
-        properties: %{publish: %Schema{type: :boolean, writeOnly: true}},
+        properties: %{publish: %Schema{type: :boolean, permissions: %Schema.Permissions{writeOnly: true}}},
         required: [:publish]
       }
 

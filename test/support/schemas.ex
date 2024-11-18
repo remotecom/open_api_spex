@@ -188,7 +188,7 @@ defmodule OpenApiSpexTest.Schemas do
         id: %Schema{type: :integer, description: "User ID"},
         name: %Schema{type: :string, description: "User name", pattern: ~r/[a-zA-Z][a-zA-Z0-9_]+/},
         email: %Schema{type: :string, description: "Email address", format: :email},
-        password: %Schema{type: :string, description: "Login password", writeOnly: true},
+        password: %Schema{type: :string, description: "Login password", permissions: %Schema.Permissions{writeOnly: true}},
         age: %Schema{type: :integer, description: "Age"},
         inserted_at: %Schema{
           type: :string,

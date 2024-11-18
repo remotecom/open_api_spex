@@ -156,8 +156,7 @@
           "codeowners": "team-rocker"
         },
         "nullable": false,
-        "readOnly": false,
-        "writeOnly": false,
+        "permissions": {"readOnly": false, "writeOnly": false},
         "deprecated": false,
         "externalDocs": {
           "description": "Find more info here",
