@@ -389,9 +389,10 @@ defmodule OpenApiSpex.DeprecatedCast do
     do: {:error, "#{path}: #{value} is smaller than minimum #{n}"}
 
   @spec validate_max_length(Schema.t(), String.t(), String.t()) :: :ok | {:error, String.t()}
-  defp validate_max_length(%{length: nil}, _val, _path), do: :ok
+  defp validate_max_length(%{stringMeta: nil}, _val, _path), do: :ok
+  defp validate_max_length(%{stringMeta: %Schema.StringMeta{maxLength: nil}}, _val, _path), do: :ok
 
-  defp validate_max_length(%{length: %Schema.Length{max: n}}, value, path) do
+  defp validate_max_length(%{stringMeta: %Schema.StringMeta{maxLength: n}}, value, path) do
     case String.length(value) <= n do
       true -> :ok
       _ -> {:error, "#{path}: String length is larger than max length: #{n}"}
@@ -399,9 +400,10 @@ defmodule OpenApiSpex.DeprecatedCast do
   end
 
   @spec validate_min_length(Schema.t(), String.t(), String.t()) :: :ok | {:error, String.t()}
-  defp validate_min_length(%{length: nil}, _val, _path), do: :ok
+  defp validate_min_length(%{stringMeta: nil}, _val, _path), do: :ok
+  defp validate_min_length(%{stringMeta: %Schema.StringMeta{minLength: nil}}, _val, _path), do: :ok
 
-  defp validate_min_length(%{length: %Schema.Length{min: n}}, value, path) do
+  defp validate_min_length(%{stringMeta: %Schema.StringMeta{minLength: n}}, value, path) do
     case String.length(value) >= n do
       true -> :ok
       _ -> {:error, "#{path}: String length is smaller than min length: #{n}"}
@@ -409,15 +411,16 @@ defmodule OpenApiSpex.DeprecatedCast do
   end
 
   @spec validate_pattern(Schema.t(), String.t(), String.t()) :: :ok | {:error, String.t()}
-  defp validate_pattern(%{pattern: nil}, _val, _path), do: :ok
+  defp validate_pattern(%{stringMeta: nil}, _val, _path), do: :ok
+  defp validate_pattern(%{stringMeta: %Schema.StringMeta{pattern: nil}}, _val, _path), do: :ok
 
-  defp validate_pattern(schema = %{pattern: regex}, val, path) when is_binary(regex) do
+  defp validate_pattern(schema = %{stringMeta: %Schema.StringMeta{pattern: regex}}, val, path) when is_binary(regex) do
     with {:ok, regex} <- Regex.compile(regex) do
-      validate_pattern(%{schema | pattern: regex}, val, path)
+      validate_pattern(%{schema | stringMeta: %{schema.stringMeta | pattern: regex}}, val, path)
     end
   end
 
-  defp validate_pattern(%{pattern: regex = %Regex{}}, val, path) do
+  defp validate_pattern(%{stringMeta: %Schema.StringMeta{pattern: regex = %Regex{}}}, val, path) do
     case Regex.match?(regex, val) do
       true -> :ok
       _ -> {:error, "#{path}: Value #{inspect(val)} does not match pattern: #{regex.source}"}

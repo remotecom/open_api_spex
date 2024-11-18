@@ -153,8 +153,7 @@ defmodule OpenApiSpex.Schema do
     :multipleOf,
     :maximum,
     :minimum,
-    :length,
-    :pattern,
+    :stringMeta,
     :propertiesSize,
     :required,
     :enum,
@@ -197,7 +196,7 @@ defmodule OpenApiSpex.Schema do
         type: :object,
         properties: %{
           id: %Schema{type: :integer, minimum: 1},
-          name: %Schema{type: :string, pattern: "[a-zA-Z][a-zA-Z0-9_]+"},
+          name: %Schema{type: :string, stringMeta: %Schema.StringMeta{pattern: "[a-zA-Z][a-zA-Z0-9_]+"}},
           email: %Schema{type: :string, format: :email},
           last_login: %Schema{type: :string, format: :"date-time"}
         },
@@ -213,8 +212,7 @@ defmodule OpenApiSpex.Schema do
           multipleOf: number | nil,
           maximum: Schema.MinMax.t() | integer | nil,
           minimum: Schema.MinMax.t() | integer | nil,
-          length: Schema.Length.t() | nil,
-          pattern: String.t() | Regex.t() | nil,
+          stringMeta: Schema.StringMeta.t() | nil,
           propertiesSize: Schema.PropertyCount.t() | nil,
           required: [atom] | nil,
           enum: [any] | nil,
@@ -296,10 +294,10 @@ defmodule OpenApiSpex.Schema do
       iex> OpenApiSpex.Schema.validate(%OpenApiSpex.Schema{type: :integer, minimum: 5}, 3, %{})
       {:error, "#: 3 is smaller than minimum 5"}
 
-      iex> OpenApiSpex.Schema.validate(%OpenApiSpex.Schema{type: :string, pattern: "(.*)@(.*)"}, "joe@gmail.com", %{})
+      iex> OpenApiSpex.Schema.validate(%OpenApiSpex.Schema{type: :string, stringMeta: %Schema.StringMeta{pattern: "(.*)@(.*)"}}, "joe@gmail.com", %{})
       :ok
 
-      iex> OpenApiSpex.Schema.validate(%OpenApiSpex.Schema{type: :string, pattern: "(.*)@(.*)"}, "joegmail.com", %{})
+      iex> OpenApiSpex.Schema.validate(%OpenApiSpex.Schema{type: :string, stringMeta: %Schema.StringMeta{pattern: "(.*)@(.*)"}}, "joegmail.com", %{})
       {:error, "#: Value \"joegmail.com\" does not match pattern: (.*)@(.*)"}
   """
   @spec validate(Schema.t() | Reference.t(), any, %{String.t() => Schema.t() | Reference.t()}) ::
@@ -389,14 +387,14 @@ defmodule OpenApiSpex.Schema do
   def example(%Schema{type: :string, format: :"date-time"}), do: "2020-04-20T16:20:00Z"
   def example(%Schema{type: :string, format: :uuid}), do: "02ef9c5f-29e6-48fc-9ec3-7ed57ed351f6"
 
-  def example(%Schema{type: :string, length: %Schema.Length{min: 1}}), do: "a"
-  def example(%Schema{type: :string, length: %Schema.Length{min: 2}}), do: "ab"
-  def example(%Schema{type: :string, length: %Schema.Length{min: 3}}), do: "abc"
-  def example(%Schema{type: :string, length: %Schema.Length{min: 4}}), do: "abcd"
-  def example(%Schema{type: :string, length: %Schema.Length{min: 5}}), do: "abcde"
-  def example(%Schema{type: :string, length: %Schema.Length{min: 6}}), do: "abcdef"
+  def example(%Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 1}}), do: "a"
+  def example(%Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 2}}), do: "ab"
+  def example(%Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 3}}), do: "abc"
+  def example(%Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 4}}), do: "abcd"
+  def example(%Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 5}}), do: "abcde"
+  def example(%Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 6}}), do: "abcdef"
 
-  def example(%Schema{type: :string, length: %Schema.Length{min: min_length}})
+  def example(%Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: min_length}})
       when is_integer(min_length) and min_length > 0,
       do:
         ~c"example"

@@ -98,7 +98,7 @@ defmodule OpenApiSpex.CastAnyOfTest do
         type: :object,
         additionalProperties: false,
         properties: %{
-          food: %Schema{type: :string, length: %Schema.Length{min: 5}}
+          food: %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 5}}
         }
       }
 

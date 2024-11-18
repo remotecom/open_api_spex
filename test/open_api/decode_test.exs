@@ -139,7 +139,7 @@ defmodule OpenApiSpex.OpenApi.DecodeTest do
                    "application/json" => %OpenApiSpex.MediaType{
                      schema: %OpenApiSpex.Schema{
                        type: :string,
-                       length: %{"max" => 10}
+                       stringMeta: %{"maxLength" => 10}
                      }
                    }
                  },

@@ -9,7 +9,7 @@ defmodule OpenApiSpex.Cast.String do
 
   alias OpenApiSpex.{Cast, Cast.Error, Schema}
 
-  @schema_fields [:length, :pattern]
+  @schema_fields [:stringMeta]
 
   def cast(%{value: %Date{} = date, schema: %{format: :date}}), do: {:ok, date}
 
@@ -139,9 +139,9 @@ defmodule OpenApiSpex.Cast.String do
   ## Private functions
 
   defp apply_validation(
-         %{value: value, schema: %{length: %Schema.Length{max: max_length, min: min_length}}} = ctx,
+         %{value: value, schema: %{stringMeta: %Schema.StringMeta{maxLength: max_length, minLength: min_length, pattern: pattern}}} = ctx,
          [
-           :length | fields
+           :stringMeta | fields
          ]
        ) do
     ctx =
@@ -158,24 +158,6 @@ defmodule OpenApiSpex.Cast.String do
         ctx
       end
 
-    apply_validation(ctx, fields)
-  end
-
-  defp apply_validation(%{value: value, schema: %{length: %Schema.Length{min: min_length}}} = ctx, [
-         :length | fields
-       ])
-       when is_integer(min_length) do
-    if String.length(value) < min_length do
-      ctx
-      |> apply_error({:min_length, min_length})
-      |> apply_validation(fields)
-    else
-      apply_validation(ctx, fields)
-    end
-  end
-
-  defp apply_validation(%{value: value, schema: %{pattern: pattern}} = ctx, [:pattern | fields])
-       when not is_nil(pattern) do
     pattern =
       if is_binary(pattern) do
         Regex.compile!(pattern)
@@ -183,12 +165,16 @@ defmodule OpenApiSpex.Cast.String do
         pattern
       end
 
-    if Regex.match?(pattern, value) do
+    if is_nil(pattern) do
       apply_validation(ctx, fields)
     else
-      ctx
-      |> apply_error({:invalid_format, pattern})
-      |> apply_validation(fields)
+      if Regex.match?(pattern, value) do
+        apply_validation(ctx, fields)
+      else
+        ctx
+        |> apply_error({:invalid_format, pattern})
+        |> apply_validation(fields)
+      end
     end
   end
 

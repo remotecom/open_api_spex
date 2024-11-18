@@ -185,7 +185,7 @@ defmodule OpenApiSpex.DeprecatedCastTest do
     end
 
     test "Validate non-empty string with expected value" do
-      schema = %Schema{type: :string, length: %Schema.Length{min: 1}}
+      schema = %Schema{type: :string, stringMeta: %Schema.StringMeta{minLength: 1}}
       assert :ok = Schema.validate(schema, "BLIP", %{})
     end
   end
@@ -418,7 +418,7 @@ defmodule OpenApiSpex.DeprecatedCastTest do
       schema = %Schema{
         nullable: true,
         type: :string,
-        length: %Schema.Length{min: 1}
+        stringMeta: %Schema.StringMeta{minLength: 1}
       }
 
       assert :ok = Schema.validate(schema, "BLIP", %{})
