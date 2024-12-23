@@ -106,14 +106,14 @@ defmodule OpenApiSpex.Operation do
   @spec parameter(
           name :: atom,
           location :: Parameter.location(),
-          type :: Reference.t() | Schema.t() | Parameter.type() | atom(),
+          type :: Reference.t() | Schema.t() | Parameter.type() | Parameter.func_ref(),
           description :: String.t(),
           opts :: keyword
         ) :: Parameter.t()
   def parameter(name, location, type, description, opts \\ [])
       when is_atom(name) and
              is_atom(location) and
-             (is_map(type) or is_atom(type)) and
+             (is_map(type) or is_atom(type) or is_tuple(type)) and
              is_binary(description) and
              is_list(opts) do
     params =
