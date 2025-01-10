@@ -423,7 +423,7 @@ defmodule OpenApiSpex.Schema do
   def example(%Schema{type: :number} = s), do: example_for(s, :number)
   def example(%Schema{type: :boolean}), do: false
   def example(schema_module) when is_atom(schema_module), do: example(schema_module.schema())
-  def example({module, function}) when is_atom(module) and is_atom(function), do: example(module.function())
+  def example({module, function}) when is_atom(module) and is_atom(function), do: example(apply(module, function, []))
   def example(_schema), do: nil
 
   @doc """
